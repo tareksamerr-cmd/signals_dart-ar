@@ -1,27 +1,29 @@
 ---
-title: Overview
-description: An overview of the signals library
+title: نظرة عامة
+description: نظرة عامة على مكتبة الإشارات (signals)
 sidebar:
   order: 2
 ---
 
-Signals are not new and have been around for a long time. They are also known as [signals](https://en.wikipedia.org/wiki/Signals_and_slots) or [observables](https://en.wikipedia.org/wiki/Observable_pattern).
+# نظرة عامة على الإشارات (Signals)
 
-Many popular JavaScript frameworks now include signals as part of their core library. Each of the implementations have their own unique features and APIs. `Signals.dart` is a port of the [Preact signals library](https://preactjs.com/blog/introducing-signals/) and is designed to be as close to the original API as possible in the core API.
+ليست الإشارات بجديدة، بل هي موجودة منذ زمن طويل. تُعرف أيضًا باسم [الإشارات](https://en.wikipedia.org/wiki/Signals_and_slots) أو [الكائنات القابلة للملاحظة (Observables)](https://en.wikipedia.org/wiki/Observable_pattern).
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Jp7QBjY5K34?si=qYs2Harl0NogWtqk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+أصبحت العديد من أطر JavaScript الشهيرة تتضمن الإشارات كجزء من مكتبتها الأساسية. لكل تطبيق من هذه التطبيقات ميزاته الفريدة وواجهات برمجة التطبيقات (APIs) الخاصة به. `Signals.dart` هو نسخة مأخوذة من [مكتبة إشارات Preact](https://preactjs.com/blog/introducing-signals/) وقد صُمم ليكون قريبًا قدر الإمكان من واجهة برمجة التطبيقات الأصلية في واجهته الأساسية.
 
-Signals in preact started off by being implemented with dependencies tracked using a set but was later changed to use a linked list. The linked list implementation is more performant by taking advantage of [signal boosting](https://preactjs.com/blog/signal-boosting/) and is the implementation used in `Signals.dart`.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Jp7QBjY5K34?si=qYs2Harl0NogWtqk" title="مشغل فيديو YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-There is also a [DartPad](https://dartpad.dev/?id=d5f16f6be22e716d90419e41d10f281a) playground with some of the core methods that you can use to experiment!
+بدأت الإشارات في Preact بتنفيذ يعتمد على تتبع التبعيات باستخدام مجموعة (Set)، ولكن تم تغيير ذلك لاحقًا إلى استخدام قائمة مرتبطة (linked list). تطبيق القائمة المرتبطة هو الأكثر أداءً بفضل الاستفادة من [تعزيز الإشارات (signal boosting)](https://preactjs.com/blog/signal-boosting/)، وهذا هو التطبيق المستخدم في `Signals.dart`.
+
+يوجد أيضًا [ملعب DartPad](https://dartpad.dev/?id=d5f16f6be22e716d90419e41d10f281a) يحتوي على بعض الطرق الأساسية التي يمكنك استخدامها للتجربة!
 
 :::note
-If you are coming from the JS world and are comfortable with signals this should feel very familiar. If you are looking for a state management library in Flutter that can be used in the JS world and outside of Dart then look no further!
+إذا كنت قادمًا من عالم JavaScript وترتاح مع الإشارات، فستجد هذا مألوفًا جدًا. وإذا كنت تبحث عن مكتبة لإدارة الحالة في Flutter يمكن استخدامها في عالم JS وخارج Dart أيضًا، فلا تبحث أكثر!
 :::
 
-## Minimal Updates
+## التحديثات الصغرى (Minimal Updates)
 
-An advantage with signals is the computation you get to save. **If you never read a signal it never gets computed.** That means that if you have a chain of computed values and never read the value of the last one then none of the callbacks would be called.
+الميزة الكبرى للإشارات هي التوفير في الحسابات. **إذا لم تقم مطلقًا بقراءة إشارة، فلن يتم حسابها أبدًا.** وهذا يعني أنه إذا كان لديك سلسلة من القيم المحسوبة (computed) ولم تقرأ قيمة آخرها، فلن يتم استدعاء أي من دوال الاستدعاء (callbacks).
 
 ```dart
 import 'package:signals/signals.dart';
@@ -31,19 +33,18 @@ final b = computed(() => a.value + 1);
 final c = computed(() => b.value + 1);
 final d = computed(() => c.value + 1);
 
-// if you never read `d` then none of the callbacks will be called
+// إذا لم تقرأ `d` مطلقًا، فلن يتم استدعاء أي من دوال الاستدعاء
 
-// All the callbacks will be called
+// الآن سيتم استدعاء كل دوال الاستدعاء
 print(d.value); // 3
 
-// None of the callbacks will be called because the 
-// value is cached at each node
+// لن يتم استدعاء أي من دوال الاستدعاء لأن القيمة مخزنة في كل عقدة
 print(d.value); // 3
 ```
 
-Signals also are a `pull` based state management library unlike most `push` based systems. This means that just because you update a signal value it does not mean that it will propagate (i.e. notifyListeners) to its targets.
+الإشارات هي أيضًا مكتبة لإدارة الحالة تعتمد على أسلوب السحب (pull)، على عكس معظم الأنظمة التي تعتمد على أسلوب الدفع (push). هذا يعني أن مجرد تحديث قيمة إشارة لا يعني بالضرورة انتشار هذا التحديث (أي إخطار المستمعين) إلى الأهداف المرتبطة.
 
-Computed is also a special signal that keeps track of its dependencies and caches its value so it will only recompute on read and when the dependencies change. This can be pretty extensive and you can have a chain of computed signals and each of them are optimizing for the minimal amount of updates.
+computed هي إشارة خاصة تتتبع تبعياتها وتخزّن قيمتها مؤقتًا، بحيث لا تعيد الحساب إلا عند قراءتها وعندما تتغير التبعيات. يمكن أن يكون هذا متقدمًا جدًا، حيث يمكن أن يكون لديك سلسلة من الإشارات المحسوبة وكل واحدة منها محسّنة لأقل عدد ممكن من التحديثات.
 
 ```dart
 import 'package:signals/signals.dart';
@@ -55,22 +56,22 @@ final c = computed(() => a.value + b.value);
 final d = computed(() => c.value + 1);
 final e = computed(() => d.value + 1);
 
-// All the callbacks will be called
+// سيتم استدعاء كل دوال الاستدعاء
 print(e.value); // 2
 
-// None of the callbacks will be called because the
-// value is cached at each node
+// لن يتم استدعاء أي من دوال الاستدعاء لأن القيمة مخزنة مؤقتًا في كل عقدة
 print(e.value); // 2
 
-// Only the callbacks that need to be updated
-// will be called
+// سيتم استدعاء دوال الاستدعاء التي تحتاج إلى تحديث فقط
 b.value = 1;
 print(e.value); // 3
 ```
 
-## Further reading
+قراءات إضافية
 
-- https://signia.tldraw.dev/docs/what-are-signals
-- https://www.solidjs.com/guides/reactivity
-- https://angular.io/guide/signals
-- https://vuejs.org/guide/extras/reactivity-in-depth.html
+· https://signia.tldraw.dev/docs/what-are-signals
+· https://www.solidjs.com/guides/reactivity
+· https://angular.io/guide/signals
+· https://vuejs.org/guide/extras/reactivity-in-depth.html
+
+```
