@@ -1,11 +1,11 @@
 ---
 title: Untracked
-description: Prevents subscriptions from happening
+description: يمنع الاشتراكات من الحدوث
 sidebar:
   order: 3
 ---
 
-In case when you're receiving a callback that can read some signals, but you don't want to subscribe to them, you can use `untracked` to prevent any subscriptions from happening.
+في الحالة التي تتلقى فيها دالة رد اتصال يمكنها قراءة بعض الإشارات، ولكنك لا ترغب في الاشتراك فيها، يمكنك استخدام `untracked` لمنع حدوث أي اشتراكات.
 
 ```dart
 final counter = signal(0);
