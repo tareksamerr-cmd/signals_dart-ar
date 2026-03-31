@@ -1,11 +1,11 @@
 ---
 title: Effect
-description: Effects are used to perform side effects from signals
+description: تُستخدم المؤثرات (Effects) لتنفيذ الآثار الجانبية من الإشارات
 sidebar:
   order: 2
 ---
 
-The `effect` function is the last piece that makes everything reactive. When you access a signal inside its callback function, that signal and every dependency of said signal will be activated and subscribed to. In that regard it is very similar to [`computed(fn)`](/core/computed). By default all updates are lazy, so nothing will update until you access a signal inside `effect`.
+دالة `effect` هي القطعة الأخيرة التي تجعل كل شيء تفاعليًا. عندما تصل إلى إشارة داخل دالة رد الاتصال الخاصة بها، سيتم تنشيط تلك الإشارة وكل تبعية لتلك الإشارة والاشتراك فيها. في هذا الصدد، هي مشابهة جدًا لـ [`computed(fn)`](/core/computed). بشكل افتراضي، تكون جميع التحديثات كسولة (lazy)، لذلك لن يتم تحديث أي شيء حتى تصل إلى إشارة داخل `effect`.
 
 ```dart
 import 'package:signals/signals.dart';
@@ -22,7 +22,7 @@ effect(() => print(fullName.value));
 name.value = "John";
 ```
 
-You can destroy an effect and unsubscribe from all signals it was subscribed to, by calling the returned function.
+يمكنك تدمير `effect` وإلغاء الاشتراك من جميع الإشارات التي كان مشتركًا فيها، عن طريق استدعاء الدالة المعادة.
 
 ```dart
 import 'package:signals/signals.dart';
@@ -43,9 +43,9 @@ dispose();
 surname.value = "Doe 2";
 ```
 
-## Cleanup Callback
+## دالة رد الاتصال للتنظيف (Cleanup Callback)
 
-You can also return a cleanup function from an effect. This function will be called when the effect is destroyed.
+يمكنك أيضًا إعادة دالة تنظيف من `effect`. سيتم استدعاء هذه الدالة عند تدمير `effect`.
 
 ```dart
 import 'package:signals/signals.dart';
@@ -61,9 +61,9 @@ final dispose = effect(() {
 dispose();
 ```
 
-## On Dispose Callback
+## دالة رد الاتصال عند التخلص (On Dispose Callback)
 
-You can also pass a callback to `effect` that will be called when the effect is destroyed.
+يمكنك أيضًا تمرير دالة رد اتصال إلى `effect` سيتم استدعاؤها عند تدمير `effect`.
 
 ```dart
 import 'package:signals/signals.dart';
@@ -78,10 +78,10 @@ final dispose = effect(() {
 dispose();
 ```
 
-## Preventing Cycles
+## منع الحلقات (Preventing Cycles)
 
 :::danger
-Mutating a signal inside an effect will cause an infinite loop, because the effect will be triggered again. To prevent this, you can use [`untracked(fn)`](/core/untracked) to read a signal without subscribing to it.
+سيؤدي تغيير إشارة داخل `effect` إلى حلقة لا نهائية، لأن `effect` سيتم تشغيله مرة أخرى. لمنع هذا، يمكنك استخدام [`untracked(fn)`](/core/untracked) لقراءة إشارة دون الاشتراك فيها.
 
 ```dart
 import 'dart:async';
