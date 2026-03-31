@@ -1,11 +1,11 @@
 ---
 title: Batch
-description: Batch multiple signal writes into one update
+description: تجميع عمليات كتابة الإشارات المتعددة في تحديث واحد
 sidebar:
   order: 4
 ---
 
-The `batch` function allows you to combine multiple signal writes into one single update that is triggered at the end when the callback completes.
+تسمح لك دالة `batch` بدمج عمليات كتابة إشارات متعددة في تحديث واحد يتم تشغيله في النهاية عند اكتمال دالة رد الاتصال.
 
 ```dart
 import 'package:signals/signals.dart';
@@ -25,7 +25,7 @@ batch(() {
 });
 ```
 
-When you access a signal that you wrote to earlier inside the callback, or access a computed signal that was invalidated by another signal, we'll only update the necessary dependencies to get the current value for the signal you read from. All other invalidated signals will update at the end of the callback function.
+عندما تصل إلى إشارة قمت بالكتابة إليها سابقًا داخل دالة رد الاتصال، أو تصل إلى إشارة `computed` تم إبطالها بواسطة إشارة أخرى، سنقوم فقط بتحديث التبعيات الضرورية للحصول على القيمة الحالية للإشارة التي قرأت منها. سيتم تحديث جميع الإشارات الأخرى التي تم إبطالها في نهاية دالة رد الاتصال.
 
 ```dart
 import 'package:signals/signals.dart';
@@ -45,7 +45,7 @@ batch(() {
 // Now we reached the end of the batch and call the effect
 ```
 
-Batches can be nested and updates will be flushed when the outermost batch call completes.
+يمكن تداخل عمليات `Batch` وسيتم تفريغ التحديثات عند اكتمال استدعاء `batch` الخارجي.
 
 ```dart
 import 'package:signals/signals.dart';
