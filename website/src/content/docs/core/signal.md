@@ -1,11 +1,12 @@
 ---
 title: Signal
-description: How to create and use a signal
+description: كيفية انشاء و استخدام signal
 sidebar:
   order: 0
 ---
 
-The `signal` function creates a new signal. A signal is a container for a value that can change over time. You can read a signal's value or subscribe to value updates by accessing its `.value` property.
+
+تُنشئ دالة `signal` إشارة جديدة. الإشارة هي حاوية لقيمة يمكن أن تتغير بمرور الوقت. يمكنك قراءة قيمة الإشارة أو الاشتراك في تحديثات القيمة عن طريق الوصول إلى خاصية `.value` الخاصة بها.
 
 ```dart
 import 'package:signals/signals.dart';
@@ -19,19 +20,19 @@ print(counter.value);
 counter.value = 1;
 ```
 
-Signals can be created globally, inside classes or functions. It's up to you how you want to structure your app.
+يمكن إنشاء الإشارات بشكل عام، داخل الفئات أو الدوال. الأمر متروك لك في كيفية هيكلة تطبيقك.
 
-It is not recommended to create signals inside effects or computed, as this will create a new signal every time the effect or computed is triggered. This can lead to unexpected behavior.
+لا يُنصح بإنشاء الإشارات داخل `effects` أو `computed`، حيث سيؤدي ذلك إلى إنشاء إشارة جديدة في كل مرة يتم فيها تشغيل `effect` أو `computed`. قد يؤدي هذا إلى سلوك غير متوقع.
 
-In Flutter do not create signals inside `build` methods, as this will create a new signal every time the widget is rebuilt.
+في Flutter، لا تُنشئ إشارات داخل طرق `build`، حيث سيؤدي ذلك إلى إنشاء إشارة جديدة في كل مرة يتم فيها إعادة بناء الودجت.
 
-## Writing to a signal
+## الكتابة إلى إشارة (Writing to a signal)
 
-Writing to a signal is done by setting its `.value` property. Changing a signal's value synchronously updates every [computed](/core/computed) and [effect](/core/effect) that depends on that signal, ensuring your app state is always consistent.
+تتم الكتابة إلى إشارة عن طريق تعيين خاصية `.value` الخاصة بها. يؤدي تغيير قيمة الإشارة إلى تحديث متزامن لكل من `computed` و `effect` الذي يعتمد على تلك الإشارة، مما يضمن أن حالة تطبيقك متسقة دائمًا.
 
 ## .peek()
 
-In the rare instance that you have an effect that should write to another signal based on the previous value, but you _don't_ want the effect to be subscribed to that signal, you can read a signals's previous value via `signal.peek()`.
+في الحالات النادرة التي يكون لديك `effect` يجب أن يكتب إلى إشارة أخرى بناءً على القيمة السابقة، ولكنك **لا** تريد أن يكون `effect` مشتركًا في تلك الإشارة، يمكنك قراءة القيمة السابقة للإشارة عبر `signal.peek()`.
 
 ```dart
 final counter = signal(0);
@@ -46,11 +47,11 @@ effect(() {
 });
 ```
 
-Note that you should only use `signal.peek()` if you really need it. Reading a signal's value via `signal.value` is the preferred way in most scenarios.
+لاحظ أنه يجب عليك استخدام `signal.peek()` فقط إذا كنت في حاجة ماسة إليه. قراءة قيمة الإشارة عبر `signal.value` هي الطريقة المفضلة في معظم السيناريوهات.
 
 ## .value
 
-The `.value` property of a signal is used to read or write to the signal. If used inside an effect or computed, it will subscribe to the signal and trigger the effect or computed whenever the signal's value changes.
+تُستخدم خاصية `.value` للإشارة للقراءة أو الكتابة إلى الإشارة. إذا تم استخدامها داخل `effect` أو `computed`، فستشترك في الإشارة وتُشغل `effect` أو `computed` كلما تغيرت قيمة الإشارة.
 
 ```dart
 final counter = signal(0);
@@ -62,20 +63,20 @@ effect(() {
 counter.value = 1;
 ```
 
-## Force Update
+## فرض التحديث (Force Update)
 
-If you want to force an update for a signal, you can call the `.set(..., force: true)` method. This will trigger all effects and mark all computed as dirty.
+إذا كنت ترغب في فرض تحديث لإشارة، يمكنك استدعاء الدالة `.set(..., force: true)`. سيؤدي هذا إلى تشغيل جميع `effects` ووضع علامة على جميع `computed` على أنها غير نظيفة (dirty).
 
 ```dart
 final counter = signal(0);
 counter.set(1, force: true);
 ```
 
-## Disposing
+## التخلص (Disposing)
 
-### Auto Dispose
+### التخلص التلقائي (Auto Dispose)
 
-If a signal is created with autoDispose set to true, it will automatically dispose itself when there are no more listeners.
+إذا تم إنشاء إشارة مع تعيين `autoDispose` إلى `true`، فستتخلص من نفسها تلقائيًا عندما لا يكون هناك المزيد من المستمعين.
 
 ```dart
 final s = signal(0, autoDispose: true);
@@ -86,7 +87,7 @@ final value = s.value; // 0
 // prints: Signal destroyed
 ```
 
-A auto disposing signal does not require its dependencies to be auto disposing. When it is disposed it will freeze its value and stop tracking its dependencies.
+لا تتطلب الإشارة التي تتخلص تلقائيًا أن تكون تبعياتها تتخلص تلقائيًا. عندما يتم التخلص منها، ستجمد قيمتها وتتوقف عن تتبع تبعياتها.
 
 ```dart
 final s = signal(0);
@@ -95,7 +96,7 @@ final c = computed(() => s.value);
 // c will not react to changes in s
 ```
 
-You can check if a signal is disposed by calling the `.disposed` method.
+يمكنك التحقق مما إذا تم التخلص من إشارة عن طريق استدعاء الدالة `.disposed`.
 
 ```dart
 final s = signal(0);
@@ -104,9 +105,9 @@ s.dispose();
 print(s.disposed); // true
 ```
 
-### On Dispose Callback
+### دالة رد الاتصال عند التخلص (On Dispose Callback)
 
-You can attach a callback to a signal that will be called when the signal is destroyed.
+يمكنك إرفاق دالة رد اتصال بإشارة سيتم استدعاؤها عند تدمير الإشارة.
 
 ```dart
 final s = signal(0);
@@ -114,9 +115,9 @@ s.onDispose(() => print('Signal destroyed'));
 s.dispose();
 ```
 
-## Custom Signal
+## إشارة مخصصة (Custom Signal)
 
-You can create a custom signal by extending the `Signal` class.
+يمكنك إنشاء إشارة مخصصة عن طريق توسيع فئة `Signal`.
 
 ```dart
 class MySignal extends Signal<int> {
@@ -125,26 +126,26 @@ class MySignal extends Signal<int> {
 ```
 
 :::tip
-You can apply any number of mixins to a custom signal to add additional functionality.
+يمكنك تطبيق أي عدد من الـ `mixins` على إشارة مخصصة لإضافة وظائف إضافية.
 
-Mixins:
-- [ValueListenableSignalMixin](/mixins/value-listenable) to implement ValueListenable<T>
-- [ValueNotifierSignalMixin](/mixins/value-notifier) to implement ValueNotifier<T>
-- [ChangeStackSignalMixin](/mixins/change-stack) to add undo and redo functionality
-- [TrackedSignalMixin](/mixins/tracked) to add initial and previous value tracking
-- [StreamSignalMixin](/mixins/stream) to implement Stream
-- [SinkSignalMixin](/mixins/sink) to implement Sink
-- [EventSinkSignalMixin](/mixins/event-sink) to implement EventSink
-- [ListSignalMixin](/mixins/list) for List value types
-- [MapSignalMixin](/mixins/map) for Map value types
-- [SetSignalMixin](/mixins/set) for Set value types
-- [IterableSignalMixin](/mixins/iterable) for Iterable<T> value types
-- [QueueSignalMixin](/mixins/queue) for Queue value types
+الـ `Mixins`:
+- `ValueListenableSignalMixin` لتطبيق `ValueListenable<T>`
+- `ValueNotifierSignalMixin` لتطبيق `ValueNotifier<T>`
+- `ChangeStackSignalMixin` لإضافة وظائف التراجع والإعادة
+- `TrackedSignalMixin` لإضافة تتبع القيمة الأولية والسابقة
+- `StreamSignalMixin` لتطبيق `Stream`
+- `SinkSignalMixin` لتطبيق `Sink`
+- `EventSinkSignalMixin` لتطبيق `EventSink`
+- `ListSignalMixin` لأنواع قيم القائمة (List)
+- `MapSignalMixin` لأنواع قيم الخريطة (Map)
+- `SetSignalMixin` لأنواع قيم المجموعة (Set)
+- `IterableSignalMixin` لأنواع قيم `Iterable<T>`
+- `QueueSignalMixin` لأنواع قيم الطابور (Queue)
 :::
 
 ## Flutter
 
-In Flutter if you want to create a signal that automatically disposes itself when the widget is removed from the widget tree and rebuilds the widget when the signal changes, you can use the `createSignal` inside a stateful widget.
+في Flutter، إذا كنت ترغب في إنشاء إشارة تتخلص من نفسها تلقائيًا عند إزالة الودجت من شجرة الودجت وتُعيد بناء الودجت عندما تتغير الإشارة، يمكنك استخدام `createSignal` داخل ودجت ذي حالة (stateful widget).
 
 ```dart
 import 'package:flutter/material.dart';
@@ -178,13 +179,13 @@ class _CounterWidgetState extends State<CounterWidget> with SignalsMixin {
 }
 ```
 
-No `Watch` widget or extension is needed, the signal will automatically dispose itself when the widget is removed from the widget tree.
+لا توجد حاجة إلى ودجت `Watch` أو امتداد، ستتخلص الإشارة من نفسها تلقائيًا عند إزالة الودجت من شجرة الودجت.
 
-The `SignalsMixin` is a mixin that automatically disposes all signals created in the state when the widget is removed from the widget tree.
+`SignalsMixin` هو `mixin` يتخلص تلقائيًا من جميع الإشارات التي تم إنشاؤها في الحالة عندما يتم إزالة الودجت من شجرة الودجت.
 
-## Testing
+## الاختبار (Testing)
 
-Testing signals is possible by converting a signal to a stream and testing it like any other stream in Dart.
+يمكن اختبار الإشارات عن طريق تحويل الإشارة إلى `stream` واختبارها مثل أي `stream` آخر في Dart.
 
 ```dart
 test('test as stream', () {
@@ -199,9 +200,9 @@ test('test as stream', () {
 });
 ```
 
-`emitsInOrder` is a matcher that will check if the stream emits the values in the correct order which in this case is each value after a signal is updated.
+`emitsInOrder` هو مطابق (matcher) سيتحقق مما إذا كان الـ `stream` يُصدر القيم بالترتيب الصحيح، وهو في هذه الحالة كل قيمة بعد تحديث الإشارة.
 
-You can also override the initial value of a signal when testing. This is is useful for mocking and testing specific value implementations.
+يمكنك أيضًا تجاوز القيمة الأولية للإشارة عند الاختبار. هذا مفيد للمحاكاة واختبار تطبيقات قيم محددة.
 
 ```dart
 test('test with override', () {
@@ -217,4 +218,4 @@ test('test with override', () {
 });
 ```
 
-`overrideWith` returns a new signal with the same global id sets the value as if it was created with it. This can be useful when using async signals or global signals used for dependency injection.
+تُرجع `overrideWith` إشارة جديدة بنفس المعرف العام وتُعيّن القيمة كما لو تم إنشاؤها بها. يمكن أن يكون هذا مفيدًا عند استخدام إشارات غير متزامنة أو إشارات عامة تُستخدم لحقن التبعية.
