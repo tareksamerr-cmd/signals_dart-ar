@@ -1,13 +1,13 @@
 ---
 title: Computed
-description: Create a signal that derives its value from other signals
+description: إنشاء إشارة تستمد قيمتها من إشارات أخرى
 sidebar:
   order: 1
 ---
 
-Data is often derived from other pieces of existing data. The `computed` function lets you combine the values of multiple signals into a new signal that can be reacted to, or even used by additional computeds. When the signals accessed from within a computed callback change, the computed callback is re-executed and its new return value becomes the computed signal's value.
+غالبًا ما تُشتق البيانات من أجزاء أخرى من البيانات الموجودة. تتيح لك دالة `computed` دمج قيم إشارات متعددة في إشارة جديدة يمكن التفاعل معها، أو حتى استخدامها بواسطة `computed` إضافية. عندما تتغير الإشارات التي يتم الوصول إليها من داخل دالة رد الاتصال الخاصة بـ `computed`، يتم إعادة تنفيذ دالة رد الاتصال الخاصة بـ `computed` وتصبح قيمتها المرتجعة الجديدة هي قيمة إشارة `computed`.
 
-> `Computed` class extends the [`Signal`](/core/signal/) class, so you can use it anywhere you would use a signal.
+> فئة `Computed` توسع فئة `Signal`، لذا يمكنك استخدامها في أي مكان تستخدم فيه إشارة.
 
 ```dart
 import 'package:signals/signals.dart';
@@ -27,13 +27,13 @@ name.value = "John";
 print(fullName.value);
 ```
 
-Any signal that is accessed inside the `computed`'s callback function will be automatically subscribed to and tracked as a dependency of the computed signal.
+أي إشارة يتم الوصول إليها داخل دالة رد الاتصال الخاصة بـ `computed` سيتم الاشتراك فيها وتتبعها تلقائيًا كاعتماد لإشارة `computed`.
 
-> Computed signals are both lazily evaluated and memoized
+> إشارات `Computed` يتم تقييمها بشكل كسول (lazily evaluated) وتخزينها مؤقتًا (memoized).
 
-## Force Re-evaluation
+## فرض إعادة التقييم (Force Re-evaluation)
 
-You can force a computed signal to re-evaluate by calling its `.recompute` method. This will re-run the computed callback and update the computed signal's value.
+يمكنك فرض إعادة تقييم إشارة `computed` عن طريق استدعاء دالة `.recompute` الخاصة بها. سيؤدي هذا إلى إعادة تشغيل دالة رد الاتصال الخاصة بـ `computed` وتحديث قيمة إشارة `computed`.
 
 ```dart
 final name = signal("Jane");
@@ -43,11 +43,11 @@ final fullName = computed(() => name.value + " " + surname.value);
 fullName.recompute(); // Re-runs the computed callback
 ```
 
-## Disposing
+## التخلص (Disposing)
 
-### Auto Dispose
+### التخلص التلقائي (Auto Dispose)
 
-If a computed signal is created with autoDispose set to true, it will automatically dispose itself when there are no more listeners.
+إذا تم إنشاء إشارة `computed` مع تعيين `autoDispose` إلى `true`، فستتخلص من نفسها تلقائيًا عندما لا يكون هناك المزيد من المستمعين.
 
 ```dart
 final s = computed(() => 0, autoDispose: true);
@@ -58,9 +58,9 @@ final value = s.value; // 0
 // prints: Signal destroyed
 ```
 
-A auto disposing signal does not require its dependencies to be auto disposing. When it is disposed it will freeze its value and stop tracking its dependencies.
+لا تتطلب الإشارة التي تتخلص تلقائيًا أن تكون تبعياتها تتخلص تلقائيًا. عندما يتم التخلص منها، ستجمد قيمتها وتتوقف عن تتبع تبعياتها.
 
-This means that it will no longer react to changes in its dependencies.
+هذا يعني أنها لن تتفاعل بعد الآن مع التغييرات في تبعياتها.
 
 ```dart
 final s = computed(() => 0);
@@ -70,7 +70,7 @@ final b = computed(() => s.value); // 0
 // b will not react to changes in s
 ```
 
-You can check if a signal is disposed by calling the `.disposed` method.
+يمكنك التحقق مما إذا تم التخلص من إشارة عن طريق استدعاء دالة `.disposed`.
 
 ```dart
 final s = computed(() => 0);
@@ -79,9 +79,9 @@ s.dispose();
 print(s.disposed); // true
 ```
 
-### On Dispose Callback
+### دالة رد الاتصال عند التخلص (On Dispose Callback)
 
-You can attach a callback to a signal that will be called when the signal is destroyed.
+يمكنك إرفاق دالة رد اتصال بإشارة سيتم استدعاؤها عند تدمير الإشارة.
 
 ```dart
 final s = computed(() => 0);
@@ -89,9 +89,9 @@ s.onDispose(() => print('Signal destroyed'));
 s.dispose();
 ```
 
-## Custom Computed
+## إشارة Computed مخصصة (Custom Computed)
 
-You can create a custom computed signal by extending the `Computed` class.
+يمكنك إنشاء إشارة `computed` مخصصة عن طريق توسيع فئة `Computed`.
 
 ```dart
 class MyComputed extends Computed<int> {
@@ -101,7 +101,7 @@ class MyComputed extends Computed<int> {
 
 ## Flutter
 
-In Flutter if you want to create a signal that automatically disposes itself when the widget is removed from the widget tree and rebuilds the widget when the signal changes, you can use the `createComputed` inside a stateful widget.
+في Flutter، إذا كنت ترغب في إنشاء إشارة تتخلص من نفسها تلقائيًا عند إزالة الودجت من شجرة الودجت وتُعيد بناء الودجت عندما تتغير الإشارة، يمكنك استخدام `createComputed` داخل ودجت ذي حالة (stateful widget).
 
 ```dart
 import 'package:flutter/material.dart';
@@ -137,13 +137,13 @@ class _CounterWidgetState extends State<CounterWidget> with SignalsMixin {
 }
 ```
 
-No `Watch` widget or extension is needed, the signal will automatically dispose itself when the widget is removed from the widget tree.
+لا توجد حاجة إلى ودجت `Watch` أو امتداد، ستتخلص الإشارة من نفسها تلقائيًا عند إزالة الودجت من شجرة الودجت.
 
-The `SignalsMixin` is a mixin that automatically disposes all signals created in the state when the widget is removed from the widget tree.
+`SignalsMixin` هو `mixin` يتخلص تلقائيًا من جميع الإشارات التي تم إنشاؤها في الحالة عندما يتم إزالة الودجت من شجرة الودجت.
 
-## Testing
+## الاختبار (Testing)
 
-Testing computed signals is possible by converting a computed to a stream and testing it like any other stream in Dart.
+يمكن اختبار إشارات `computed` عن طريق تحويل إشارة `computed` إلى `stream` واختبارها مثل أي `stream` آخر في Dart.
 
 ```dart
 test('test as stream', () {
@@ -159,9 +159,9 @@ test('test as stream', () {
 });
 ```
 
-`emitsInOrder` is a matcher that will check if the stream emits the values in the correct order which in this case is each value after a signal is updated.
+`emitsInOrder` هو مطابق (matcher) سيتحقق مما إذا كان الـ `stream` يُصدر القيم بالترتيب الصحيح، وهو في هذه الحالة كل قيمة بعد تحديث الإشارة.
 
-You can also override the initial value of a computed signal when testing. This is is useful for mocking and testing specific value implementations.
+يمكنك أيضًا تجاوز القيمة الأولية لإشارة `computed` عند الاختبار. هذا مفيد للمحاكاة واختبار تطبيقات قيم محددة.
 
 ```dart
 test('test with override', () {
@@ -179,4 +179,4 @@ test('test with override', () {
 });
 ```
 
-`overrideWith` returns a new computed signal with the same global id sets the value as if the computed callback returned it.
+تُرجع `overrideWith` إشارة `computed` جديدة بنفس المعرف العام وتُعيّن القيمة كما لو كانت دالة رد الاتصال الخاصة بـ `computed` قد أعادتها.
